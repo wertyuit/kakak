@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>ملاحظات الموقع</title>
+</head>
+<body>
+  <h1>ملاحظات الموقع</h1>
+  <form id="feedback-form">
+    <label for="username">الاسم:</label>
+    <input type="text" id="username" required>
+    <br>
+    <label for="user-feedback">الرأي:</label>
+    <textarea id="user-feedback" required></textarea>
+    <br>
+    <button type="submit">إرسال</button>
+  </form>
+  <button id="show-all-entries">إظهار جميع الملاحظات</button>
+  <div id="entries"></div>
+  <script>
+// مصفوفة لتخزين جميع الملاحظات
+const entries = [];
+
+// دالة لإضافة ملاحظة جديدة
+function addEntry(userName, userFeedback) {
+  entries.push({ userName, userFeedback });
+  // تخزين الملاحظة في ملف JSON
+  // ...
+
+  // تخزين الملاحظة في قاعدة بيانات
+  // ...
+}
+
+// دالة لعرض جميع الملاحظات
+function showAllEntries() {
+  document.getElementById("show-all-entries").style.display = "none";
+  document.getElementById("entries").style.display = "block";
+
+  entries.forEach((entry) => {
+    const entryElement = document.createElement("div");
+    entryElement.classList.add("entry");
+    entryElement.innerHTML = `
+      <b>${entry.userName}:</b> ${entry.userFeedback}
+    `;
+
+    document.getElementById("entries").appendChild(entryElement);
+  });
+}
+
+// استمع إلى إرسال النموذج
+document.getElementById("feedback-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  // الحصول على اسم المستخدم وردود الفعل من النموذج
+  const userName = document.getElementById("username").value;
+  const userFeedback = document.getElementById("user-feedback").value;
+
+  // التحقق من صحة النموذج
+  if (!userName || !userFeedback) {
+    alert("يجب إدخال جميع الحقول");
+    return;
+  }
+
+  // إضافة الملاحظة الجديدة إلى المصفوفة
+  addEntry(userName, userFeedback);
+
+  // إعادة تعيين النموذج
+  event.target.reset();
+
+  // عرض الملاحظة الجديدة
+  showEntry(userName);
+});
+
+// دالة لعرض ملاحظة واحدة
+function showEntry(userName) {
+  const entry = entries.find(entry => entry.userName === userName);
+  if (!entry) return;
+
+  const entryElement = document.createElement("div");
+  entryElement.classList.add("entry");
+  entryElement.innerHTML = `
+    <b>${entry.userName}:</b> ${entry.userFeedback}
+  `;
+
+  document.getElementById("entries").appendChild(entryElement);
+}
+
+// إظهار جميع الملاحظات عند النقر على الزر
+document.getElementById("show-all-entries").addEventListener("click", showAllEntries);
+
+  </script>
+</body>
+</html>
+
